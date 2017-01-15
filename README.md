@@ -37,11 +37,8 @@ The same function code, instantiated as multiple Lambda functions each with a di
     1. *Hint: API Gateway imposes a 30 second timeout so we may as well make the lambda timeout match that*
 1. Choose **Next**
 1. Under **Review** choose **Create function**.
-1. You should see a "Congratulations!" confirmation message.  On that page you should see the full URL to your new API endpoint.  Example:
-```
-https://abcdefghij.execute-api.us-west-2.amazonaws.com/prod/eratosthenes-128
-```
-*where "abcdefghij" is a token unique to your API*
+1. You should see a "Congratulations!" confirmation message.  On that page you should see the full URL to your new API endpoint. <br>Example: `https://abcdefghij.execute-api.us-west-2.amazonaws.com/prod/eratosthenes-128`
+<br>*where "abcdefghij" is a token unique to your API*
 1. Click the **Actions** and choose **Configure test event**.
 1. Under **Input test event** enter the following code:
 `{
@@ -52,19 +49,23 @@ https://abcdefghij.execute-api.us-west-2.amazonaws.com/prod/eratosthenes-128
 }`
 1. Click **Save and test**.
 1. Your function should now execute (it will take several seconds) then show the following output:
-`{
+```
+{
   "body": "{\"durationSeconds\": 5.48261809349, \"max\": 1000000, \"loops\": 1}",
   "headers": {
     "Content-Type": "application/json"
   },
   "statusCode": 200
-}`
+}
+```
 1. It should also show the following logs:
-`START RequestId: 23f39528-db63-11e6-a488-013190970ce0 Version: $LATEST
+```
+START RequestId: 23f39528-db63-11e6-a488-013190970ce0 Version: $LATEST
 looping 1 time(s)
 Highest 3 primes: 999983, 999979, 999961
 END RequestId: 23f39528-db63-11e6-a488-013190970ce0
-REPORT RequestId: 23f39528-db63-11e6-a488-013190970ce0	Duration: 5484.17 ms	Billed Duration: 5500 ms 	Memory Size: 128 MB	Max Memory Used: 65 MB`
+REPORT RequestId: 23f39528-db63-11e6-a488-013190970ce0	Duration: 5484.17 ms	Billed Duration: 5500 ms 	Memory Size: 128 MB	Max Memory Used: 65 MB
+```
 1. Your eratosthenes-128 function is now working!
 1. Repeat the above steps to create three additional functions:
   - eratosthenes-256
