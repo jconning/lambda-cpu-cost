@@ -37,7 +37,9 @@ The same function code, instantiated as multiple Lambda functions each with a di
     1. *Hint: API Gateway imposes a 30 second timeout so we may as well make the lambda timeout match that*
 1. Choose **Next**
 1. Under **Review** choose **Create function**.
-1. You should see a "Congratulations!" confirmation message.  On that page you should see the full URL to your new API endpoint.  Example: `https://abcdefghij.execute-api.us-west-2.amazonaws.com/prod/eratosthenes-128a`
+1. You should see a "Congratulations!" confirmation message.  On that page you should see the full URL to your new API endpoint.  Example:
+`https://abcdefghij.execute-api.us-west-2.amazonaws.com/prod/eratosthenes-128a`
+
 *where "abcdefghij" is a token unique to your API*
 1. Click the **Actions** and choose **Configure test event**.
 1. Under **Input test event** enter the following code:
