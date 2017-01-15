@@ -25,9 +25,6 @@ The same function code, instantiated as multiple Lambda functions each with a di
     * The "128" means 128mb of memory.
   1. For the **Runtime** choose **Python 2.7**.
 1. Under **Lambda function code** for **Code entry type** choose **Edit code inline**.  Copy and paste the contents of the file lambda_function.py (in the lambda-cpu-cost repo) into the text box.
-  1. As an alternative to copy and pasting code, you can follow these steps:
-    1. Run the script create-lambda-zip.sh which will write the file eratosthenes-lambda.zip.
-    2. In the AWS Console for **Code entry type** choose **Upload a .ZIP file**.
 1. Under **Lambda function handler and role**:
   1. For **Role** choose **Create new role from template(s)**.
   1. For **Role name** enter a name such as **lambdaExecutionRole**.
@@ -41,7 +38,7 @@ The same function code, instantiated as multiple Lambda functions each with a di
 <br>*where "abcdefghij" is a token unique to your API*
 1. Click the **Actions** and choose **Configure test event**.
 1. Under **Input test event** enter the following code:
-`{
+<br>`{
   "queryStringParameters": {
       "max": 1000000,
       "loops": 1
@@ -65,13 +62,12 @@ The same function code, instantiated as multiple Lambda functions each with a di
   - eratosthenes-256
   - eratosthenes-512
   - eratosthenes-1024
+  - Everything will be the same except for these changes:
+    - Don't create a new API name but rather select the API you created earlier named "Eratosthenes" (or whatever you named it).
+    - Don't create a new role but instead select the role you created earlier named "lambdaExecutionRole" (or whatever you named it).
+    - Select the memory setting that correponds to your function (256, 512, or 1024 MB).
 
-Everything will be the same except for these changes:
-  - Don't create a new API name but rather select the API you created earlier named "Eratosthenes" (or whatever you named it).
-  - Don't create a new role but instead select the role you created earlier named "lambdaExecutionRole" (or whatever you named it).
-  - Select the memory setting that correponds to your function (256, 512, or 1024 MB).
-
-You have now prepared all four required functions!
+You have now prepared all four required functions! Please proceed to setup the test harness.
 
 ### Test harness
 ## How to run it
