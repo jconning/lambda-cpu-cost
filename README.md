@@ -67,7 +67,7 @@ The same function code, instantiated as multiple Lambda functions each with a di
     - Don't create a new role but instead select the role you created earlier named "lambdaExecutionRole" (or whatever you named it).
     - Select the memory setting that correponds to your function (256, 512, or 1024 MB).
 
-You have now prepared all four required functions!
+You have now prepared all four required functions! Please proceed to setup the test harness.
 
 ### Test harness
 ## How to run it
