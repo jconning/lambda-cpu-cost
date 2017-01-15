@@ -10,8 +10,8 @@ print('Loading function')
 def eratosthenes(n):
     sieve = [ True for i in range(n+1) ]
     def markOff(pv):
-            for i in range(pv+pv, n+1, pv):
-                sieve[i] = False
+        for i in range(pv+pv, n+1, pv):
+            sieve[i] = False
     markOff(2)
     for i in range(3, n+1):
         if sieve[i]:
@@ -28,11 +28,11 @@ def lambda_handler(event, context):
     print("looping " + str(numLoops) + " time(s)")
     for loop in range (0, numLoops):
         primes = eratosthenes(maxPrime)
-        print("Highest 3 primes: " + str(primes.pop()) + ", " + str(primes.pop()) + ", " + str(primes.pop()))
+            print("Highest 3 primes: " + str(primes.pop()) + ", " + str(primes.pop()) + ", " + str(primes.pop()))
 
     durationSeconds = timer() - start
     return {"statusCode": 200, \
-	"headers": {"Content-Type": "application/json"}, \
-	"body": "{\"durationSeconds\": " + str(durationSeconds) + \
-	", \"max\": " + str(maxPrime) + ", \"loops\": " + str(numLoops) + "}"}
+        "headers": {"Content-Type": "application/json"}, \
+        "body": "{\"durationSeconds\": " + str(durationSeconds) + \
+        ", \"max\": " + str(maxPrime) + ", \"loops\": " + str(numLoops) + "}"}
 
