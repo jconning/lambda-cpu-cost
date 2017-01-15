@@ -57,7 +57,7 @@ The same function code, instantiated as multiple Lambda functions each with a di
   "statusCode": 200
 }`
 1. It should also show the following logs:
-`START RequestId: 23f39528-db63-11e6-a488-013190970ce0 Version: $LATEST'
+<br>`START RequestId: 23f39528-db63-11e6-a488-013190970ce0 Version: $LATEST`
 <br>`looping 1 time(s)`
 <br>`Highest 3 primes: 999983, 999979, 999961`
 <br>`END RequestId: 23f39528-db63-11e6-a488-013190970ce0`
