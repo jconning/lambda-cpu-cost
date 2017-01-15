@@ -28,7 +28,7 @@ def lambda_handler(event, context):
     print("looping " + str(numLoops) + " time(s)")
     for loop in range (0, numLoops):
         primes = eratosthenes(maxPrime)
-            print("Highest 3 primes: " + str(primes.pop()) + ", " + str(primes.pop()) + ", " + str(primes.pop()))
+        print("Highest 3 primes: " + str(primes.pop()) + ", " + str(primes.pop()) + ", " + str(primes.pop()))
 
     durationSeconds = timer() - start
     return {"statusCode": 200, \
