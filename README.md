@@ -12,4 +12,6 @@ The test harness is written in Go and uses channels to control concurrency.  A c
 The same function code, instantiated as multiple Lambda functions each with a distinct level of memory, are executed the same number of times.  Since each Lambda level of memory corresponds to a distinct amount of CPU, we can measure the execution time of calculating primes for multiple levels of CPU.  And since Lambda charges per GB-second of execution time, we can show the cost of calculating primes at various Lambda memory configurations.  We can answer the question: if we double the CPU, will that cut the time in half while still costing the same?
 ## Learnings
 ## How to set it up
+### Lambda functions
+### Test harness
 ## How to run it
