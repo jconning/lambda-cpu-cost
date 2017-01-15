@@ -24,7 +24,7 @@ The same function code, instantiated as multiple Lambda functions each with a di
   1. Name the function: eratosthenes-128
     * The "128" means 128mb of memory.
   1. For the **Runtime** choose **Python 2.7**.
-1. Under **Lambda function code** for **Code entry type** choose **Edit code inline**.  Copy and paste the contents of the file lambda_function.py (in the lambda-cpu-cost repo) into the text box.
+1. Under **Lambda function code** for **Code entry type** choose **Edit code inline**.  Copy and paste the contents of the file eratosthenes_lambda.py (in the lambda-cpu-cost repo) into the text box.
 1. Under **Lambda function handler and role**:
   1. For **Role** choose **Create new role from template(s)**.
   1. For **Role name** enter a name such as **lambdaExecutionRole**.
