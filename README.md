@@ -49,15 +49,13 @@ The same function code, instantiated as multiple Lambda functions each with a di
 }`
 1. Click **Save and test**.
 1. Your function should now execute (it will take several seconds) then show the following output:
-```
-{
+`{
   "body": "{\"durationSeconds\": 5.48261809349, \"max\": 1000000, \"loops\": 1}",
   "headers": {
     "Content-Type": "application/json"
   },
   "statusCode": 200
-}
-```
+}`
 1. It should also show the following logs:
 ```
 START RequestId: 23f39528-db63-11e6-a488-013190970ce0 Version: $LATEST
