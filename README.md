@@ -24,5 +24,53 @@ The same function code, instantiated as multiple Lambda functions each with a di
   1. Name the function: eratosthenes-128
     * The "128" means 128mb of memory.
   1. For the **Runtime** choose **Python 2.7**.
+1. Under **Lambda function code** for **Code entry type** choose **Edit code inline**.  Copy and paste the contents of the file lambda_function.py (in the lambda-cpu-cost repo) into the text box.
+  1. As an alternative to copy and pasting code, you can follow these steps:
+    1. Run the script create-lambda-zip.sh which will write the file eratosthenes-lambda.zip.
+    2. In the AWS Console for **Code entry type** choose **Upload a .ZIP file**.
+1. Under **Lambda function handler and role**:
+  1. For **Role** choose **Create new role from template(s)**.
+  1. For **Role name** enter a name such as **lambdaExecutionRole**.
+1. Under **Advanced settings**:
+  1. For **Memory (MB)** choose **128**.
+  1. For **Timeout** choose **30** sec.
+    1. *Hint: API Gateway imposes a 30 second timeout so we may as well make the lambda timeout match that*
+1. Choose **Next**
+1. Under **Review** choose **Create function**.
+1. You should see a "Congratulations!" confirmation message.  On that page you should see the full URL to your new API endpoint.  Example: `https://abcdefghij.execute-api.us-west-2.amazonaws.com/prod/eratosthenes-128a`
+*where "abcdefghij" is a token unique to your API*
+1. Click the **Actions** and choose **Configure test event**.
+1. Under **Input test event** enter the following code:
+`{
+  "queryStringParameters": {
+      "max": 1000000,
+      "loops": 1
+  }
+}`
+1. Click **Save and test**.
+1. Your function should now execute (it will take several seconds) then show the following output:
+`{
+  "body": "{\"durationSeconds\": 5.48261809349, \"max\": 1000000, \"loops\": 1}",
+  "headers": {
+    "Content-Type": "application/json"
+  },
+  "statusCode": 200
+}`
+1. It should also show the following logs:
+`START RequestId: 23f39528-db63-11e6-a488-013190970ce0 Version: $LATEST
+looping 1 time(s)
+Highest 3 primes: 999983, 999979, 999961
+END RequestId: 23f39528-db63-11e6-a488-013190970ce0
+REPORT RequestId: 23f39528-db63-11e6-a488-013190970ce0	Duration: 5484.17 ms	Billed Duration: 5500 ms 	Memory Size: 128 MB	Max Memory Used: 65 MB`
+1. Your eratosthenes-128 function is now working!
+1. Repeat the above steps to create three additional functions:
+  - eratosthenes-256
+  - eratosthenes-512
+  - eratosthenes-1024
+Everything will be the same except for two changes:
+  - Don't create a new API name but rather select the API you created earlier named "Eratosthenes" (or whatever you named it).
+  - Don't create a new role but instead select the role you created earlier named "lambdaExecutionRole" (or whatever you named it).
+  - Select the memory setting that correponds to your function (256, 512, or 1024 MB).
+1. You have now prepared all four required functions!
 ### Test harness
 ## How to run it
