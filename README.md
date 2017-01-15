@@ -62,11 +62,10 @@ The same function code, instantiated as multiple Lambda functions each with a di
   - eratosthenes-256
   - eratosthenes-512
   - eratosthenes-1024
-
-Everything will be the same except for these changes:
-  - Don't create a new API name but rather select the API you created earlier named "Eratosthenes" (or whatever you named it).
-  - Don't create a new role but instead select the role you created earlier named "lambdaExecutionRole" (or whatever you named it).
-  - Select the memory setting that correponds to your function (256, 512, or 1024 MB).
+  - Everything will be the same except for these changes:
+    - Don't create a new API name but rather select the API you created earlier named "Eratosthenes" (or whatever you named it).
+    - Don't create a new role but instead select the role you created earlier named "lambdaExecutionRole" (or whatever you named it).
+    - Select the memory setting that correponds to your function (256, 512, or 1024 MB).
 
 You have now prepared all four required functions!
 
