@@ -70,6 +70,8 @@ Everything will be the same except for these changes:
   - Don't create a new API name but rather select the API you created earlier named "Eratosthenes" (or whatever you named it).
   - Don't create a new role but instead select the role you created earlier named "lambdaExecutionRole" (or whatever you named it).
   - Select the memory setting that correponds to your function (256, 512, or 1024 MB).
+
 1. You have now prepared all four required functions!
+
 ### Test harness
 ## How to run it
