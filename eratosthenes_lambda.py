@@ -31,4 +31,8 @@ def lambda_handler(event, context):
         print("Highest 3 primes: " + str(primes.pop()) + ", " + str(primes.pop()) + ", " + str(primes.pop()))
 
     durationSeconds = timer() - start
-    return {"statusCode": 200, "headers": {"Content-Type": "application/json"}, "body": "{\"durationSeconds\": " + str(durationSeconds) + ", \"max\": " + str(maxPrime) + ", \"loops\": " + str(numLoops) + "}"}
+    return {"statusCode": 200, \
+	"headers": {"Content-Type": "application/json"}, \
+	"body": "{\"durationSeconds\": " + str(durationSeconds) + \
+	", \"max\": " + str(maxPrime) + ", \"loops\": " + str(numLoops) + "}"}
+
