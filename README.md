@@ -13,5 +13,16 @@ The same function code, instantiated as multiple Lambda functions each with a di
 ## Learnings
 ## How to set it up
 ### Lambda functions
+1. In the AWS Console, visit the Lambda section and click the **Create a Lambda function** button.
+1. Under **Select blueprint** choose **Blank Function**.
+1. Under **Configure triggers**, click the dashed rounded square and choose **API Gateway**.
+  1. Choose a name for your new API, such as **Eratosthenes**.
+  1. Leave the **Deployment stage** as **prod**.
+  1. Set **Security** to **Open**.  This will enable your API to be invoked via HTTP without security credentials.
+  1. Click **Next**.
+1. Under **Configure function**:
+  1. Name the function: eratosthenes-128
+    * The "128" means 128mb of memory.
+  1. For the **Runtime** choose **Python 2.7**.
 ### Test harness
 ## How to run it
