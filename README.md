@@ -57,11 +57,11 @@ The same function code, instantiated as multiple Lambda functions each with a di
   "statusCode": 200
 }`
 1. It should also show the following logs:
-<br>`START RequestId: 23f39528-db63-11e6-a488-013190970ce0 Version: $LATEST
-<br>looping 1 time(s)
-<br>Highest 3 primes: 999983, 999979, 999961
-<br>END RequestId: 23f39528-db63-11e6-a488-013190970ce0
-<br>REPORT RequestId: 23f39528-db63-11e6-a488-013190970ce0	Duration: 5484.17 ms	Billed Duration: 5500 ms 	Memory Size: 128 MB	Max Memory Used: 65 MB`
+`START RequestId: 23f39528-db63-11e6-a488-013190970ce0 Version: $LATEST'
+<br>`looping 1 time(s)`
+<br>`Highest 3 primes: 999983, 999979, 999961`
+<br>`END RequestId: 23f39528-db63-11e6-a488-013190970ce0`
+<br>`REPORT RequestId: 23f39528-db63-11e6-a488-013190970ce0	Duration: 5484.17 ms	Billed Duration: 5500 ms 	Memory Size: 128 MB	Max Memory Used: 65 MB`
 1. Your eratosthenes-128 function is now working!
 1. Repeat the above steps to create three additional functions:
   - eratosthenes-256
