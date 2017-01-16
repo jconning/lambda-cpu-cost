@@ -82,3 +82,43 @@ Edit the config file (config.json) so that the function URLs correspond to the A
 }
 ```
 ## How to run it
+Usage:
+<br>`cd src/github.com/jconning/lambda-cpu-cost`
+<br>`go run main.go`
+Command line parameters:
+- **-conc** *integer*: the maxiumum number of Lambda functions to run concurrently (default 100)
+- **-execs** *integer*: the number of times to execute each Lambda function (default 20)
+- **-loops** *integer*: the number of times to repeat the calculation of primes, without consuming additional memory (default 1)
+- **-max** *integer*: this is n, and all primes will be calculated up to and including n
+### Run with defaults
+Running with the defaults will invoke each of the four Lambda functions 20 times, and each function will execute one loop of calculating all prime numbers up to 1M.  
+<br>`go run main.go`
+Sample output:
+```
+Number of lambda executions returning errors: 0
+Stats for each Lambda function by Lambda memory allocation:
+ 128mb 8.592724sec(avg) $0.000362(total) to calculate 20 times all prime numbers <=1000000
+ 256mb 4.369844sec(avg) $0.000368(total) to calculate 20 times all prime numbers <=1000000
+ 512mb 2.385856sec(avg) $0.000402(total) to calculate 20 times all prime numbers <=1000000
+ 1024mb 1.233483sec(avg) $0.000415(total) to calculate 20 times all prime numbers <=1000000
+Total cost of this test run: $0.001547
+```
+There should be no execution errors.  Function eratosthenes-128 ran twice as long as eratosthenes-256, which makes sense since the 256mb Lambda memory setting provides double the CPU power as the 128mb setting.
+### Calculate higher prime numbers
+We can increase n so that we calculate higher prime numbers, while still invoking the same number of Labmda function calls.  This will consume more time since the CPU has to work more to calculate the primes.  We set a limit of 1.5M which will result in a Sieve that still fits within the 128mb memory footprint.
+<br>`go run main.go -max 1500000`
+### Calculate even more prime numbers
+Let's try a prime number limit of 2.5M, which will cause the Sieve of Eratosthenes to exceed the 128mb limit.  This will result in status code 502 for the eratosthenes-128 function, which is due to excess memory consumption in the Lambda function.
+<br>`go run main.go -max 2500000`
+### Loop twice
+Let's loop the prime number calculation twice.  This will cause the Lambda function to repeat the calculation of primes without consuming more memory.  It will take twice as long to run as when we ran with the defaults.  There should be no errors from Lambda.
+<br>`go run main.go -loops 2`
+### Loop four times
+Now let's loop four times.  This will cause eratosthenes-128 to take longer than 30 seconds, which is the maximum time allowed by the API Gateway.
+<br>`go run main.go -loops 4`
+### Excessive concurrency
+Let's run each function 50 times and increase the concurrency to an excessively high number (9999).  This will cause Lambda to throttle the function and you will see some errors returned, assuming your Lambda concurrency cap is set to 100, which is the default for new AWS accounts.  You can increase the concurrency (-execs) a lot more if you want to see interesting errors like too many sockets open on the client.
+<br>`go run main.go -execs 50 -conc 9999`
+### Proper long running test
+We'll set n to 1.5M so the function has plenty of primes to calculate (and will keep the number of loops to the default of one).  We'll set the number of executions (per function) to 1000 so we put a lot of executions through Lambda.  We'll keep the concurrency limit to 80 so we stay within the cap of 100 with some breathing room.  This test should take about 7 minutes to run.  To run it longer, simply increase the executions (-execs).  This test shouldn't produce any errors.
+<br>`go run main.go -max 1500000 -execs 1000`
