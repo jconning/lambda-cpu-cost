@@ -125,3 +125,10 @@ Let's run each function 50 times and increase the concurrency to an excessively 
 ### Proper long running test
 We'll set n to 1.5M so the function has plenty of primes to calculate (and will keep the number of loops to the default of one).  We'll set the number of executions (per function) to 1000 so we put a lot of executions through Lambda.  We'll keep the concurrency limit to the default of 80 so we stay within the Lambda cap of 100 with some breathing room.  This test should take about 7 minutes to run.  To run it longer, simply increase the executions (-execs).  This test shouldn't produce any errors.
 <br>`go run main.go -max 1500000 -execs 1000`
+## Logging
+### Lambda logging
+You can see the Lambda function logging directly by testing it in the AWS Console.  On the Lambda section of the console, choose the desired function and click the **Test** button.  Be sure the test event is configured as specified above.  Both the function output and the logging will appear in the console.
+### API Gateway logging
+When invoked via API Gateway, the logging for both Lambda and API Gateway are configured in the API Gateway section of the AWS Console. Choose the Eratosthenes API in the API Gateway then in the left nav click **Stages**, then in the Stages pane click **prod**.  Then in the Settings tab, under "CloudWatch Settings", check the box **Enable CloudWatch Logs** and click **Save Changes**.  Once you make this settings change you may need to wait a few minutes before the logs start showing up.
+
+Visit the CloudWatch section of the AWS Console and choose **Logs** in the left nav.  Look for the Eratosthenes log group.
