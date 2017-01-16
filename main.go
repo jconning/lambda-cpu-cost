@@ -11,18 +11,23 @@ import (
 	"errors"
 	"sort"
 	"flag"
+	"log"
+	"strconv"
 )
 
 var maxPrime int
 var numExecutions int
 var numLoops int
 var maxConcurrency int
+var lambdaFunctions = map[int]string{}
 func init() {
 	flag.IntVar(&maxPrime, "max", 1000000, "maximum number to search for primes (<=2M to not cause out of memory in the lowest Lambda memory setting)")
 	flag.IntVar(&numExecutions, "execs", 20, "number of times to execute the Lambda function")
 	flag.IntVar(&numLoops, "loops", 1, "number of times to repeat the search for primes (without consuming additional memory)")
 	flag.IntVar(&maxConcurrency, "conc", 100, "limit of concurrently running Lambda functions")
 	flag.Parse()
+
+	parseConfig()
 }
 
 type execution struct {
@@ -30,16 +35,34 @@ type execution struct {
 	memory int
 }
 
-var lambdaFunctions = map[int]string{
-	128:"https://652zahuut4.execute-api.us-west-2.amazonaws.com/prod/eratosthenes-128",
-	256:"https://652zahuut4.execute-api.us-west-2.amazonaws.com/prod/eratosthenes-256",
-	512:"https://652zahuut4.execute-api.us-west-2.amazonaws.com/prod/eratosthenes-512",
-	1024:"https://652zahuut4.execute-api.us-west-2.amazonaws.com/prod/eratosthenes-1024",
-}
-
 // AWS Lambda pricing in USD as of Jan 2017
 var costPerRequest float64 = 0.0000002
 var costPerGbSeconds float64 = 0.00001667 
+
+func parseConfig() {
+	contents, err := ioutil.ReadFile("config.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var config interface{}
+	err = json.Unmarshal(contents, &config);
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Parse the json config using the standard library
+	funcConfig := config.(map[string]interface{})
+	functions := funcConfig["functions"].(map[string]interface{})
+	for key, value := range functions {
+		mem, err := strconv.Atoi(key)
+		if err != nil {
+			log.Fatal(err)
+		}
+		url := value.(string)
+		lambdaFunctions[mem] = url
+	}
+}
 
 func triggerLambda(url string, mem int, max int, loops int) (execution, error) {
 	var e execution
@@ -63,15 +86,16 @@ func triggerLambda(url string, mem int, max int, loops int) (execution, error) {
 	return e, nil
 }
 
-func main() {
+func invokeLambda(executions chan execution) int {
 	var wg sync.WaitGroup
-	var lambdaErrors int
 	var tokens = make(chan struct{}, maxConcurrency) // counting semaphore used to enforce a concurrency limit on calls to Lambda
-	executions := make(chan execution)
+	var lambdaErrors int
 
-	fmt.Printf("Triggering %d Lambda functions %d times each all in parallel...\n", len(lambdaFunctions), numExecutions)
+	fmt.Printf("Triggering %d Lambda functions %d times each, all in parallel\n", len(lambdaFunctions), numExecutions)
+	fmt.Printf("Each function will loop %d time(s) and in each loop calculate all primes <=%d\n", numLoops, maxPrime)
+	fmt.Println("Working...")
 	for mem, url := range lambdaFunctions {
-		for f := 0; f < numExecutions; f++ {
+		for c := 0; c < numExecutions; c++ {
 			wg.Add(1)
 			go func(u string, m int) {
 				defer wg.Done()
@@ -93,6 +117,10 @@ func main() {
 		close(executions)
 	}()
 
+	return lambdaErrors
+}
+
+func displayResults(executions chan execution, lambdaErrors int) {
 	var totalDurations map[int]float64 = make(map[int]float64)
 	var executionCounts map[int]int = make(map[int]int)
 
@@ -111,6 +139,7 @@ func main() {
 	}
 	sort.Ints(memories)
 
+	// Display results
 	fmt.Printf("Number of lambda executions returning errors: %d\n", lambdaErrors)
 	fmt.Println("Stats for each Lambda function by Lambda memory allocation:")
 	var totalCost float64
@@ -121,6 +150,14 @@ func main() {
 		fmt.Printf("  %dmb %fsec(avg) $%f(total) to calculate %d times all prime numbers <=%d\n", 
 			mem, totalDurations[mem]/float64(executionCounts[mem]), cost, executionCounts[mem], maxPrime)
 	}
-	fmt.Printf("Total cost of this test run: %f\n", totalCost);
+	fmt.Printf("Total cost of this test run: $%f\n", totalCost);
+}
+
+func main() {
+	executions := make(chan execution)
+
+	lambdaErrors := invokeLambda(executions)
+
+	displayResults(executions, lambdaErrors)
 }
 

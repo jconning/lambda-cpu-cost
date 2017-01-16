@@ -1,0 +1,9 @@
+{
+    "functions": {
+        "128": "https://652zahuut4.execute-api.us-west-2.amazonaws.com/prod/eratosthenes-128",
+        "256": "https://652zahuut4.execute-api.us-west-2.amazonaws.com/prod/eratosthenes-256",
+        "512": "https://652zahuut4.execute-api.us-west-2.amazonaws.com/prod/eratosthenes-512",
+        "1024": "https://652zahuut4.execute-api.us-west-2.amazonaws.com/prod/eratosthenes-1024"
+    }
+}
+
