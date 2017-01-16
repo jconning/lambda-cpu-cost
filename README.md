@@ -142,4 +142,38 @@ You can see the Lambda function logging directly by testing it in the AWS Consol
 ### API Gateway logging
 When invoked via API Gateway, the logging for both Lambda and API Gateway are configured in the API Gateway section of the AWS Console. Choose the Eratosthenes API in the API Gateway then in the left nav click **Stages**, then in the Stages pane click **prod**.  Then in the Settings tab, under "CloudWatch Settings", check the box **Enable CloudWatch Logs** and click **Save Changes**.  Once you make this settings change you may need to wait a few minutes before the logs start showing up.
 
+Whether or not you check the **Log full requests/responses data** checkbox will impact which errors will be available in the logs.  See the logging examples below for details.
+
 Visit the CloudWatch section of the AWS Console and choose **Logs** in the left nav.  Look for the Eratosthenes log group.
+### CloudWatch Logging example: timeout
+This is what appears in the CloudWatch log when the function is terminated due to an API Gateway timeout.  You do not need to check **Log full requests/responses data** in the API Gateway configuration (see above) for this line to appear -- it is adequate to simply have ERROR level logging turned on.
+```
+Execution failed due to a timeout error
+```
+The API Gateway returns **status code 504** when the error is due to an API Gateway timeout.
+### CloudWatch logging example: excessive memory consumption
+This is what appears in the CloudWatch log when the function encounters an error due to too much memory consumption.  You need to check the checkbox **Log full requests/responses data** in the API Gateway configuration in order for this line to appear.
+```
+Endpoint response body before transformations:
+{
+    "errorMessage": "RequestId: d27362eb-dc3a-11e6-ad1e-d97a8717a019 Process exited before completing request"
+}
+Execution failed due to configuration error: Malformed Lambda proxy response
+```
+What's happening here is that Lambda is returning json output that the API Gateway doesn't understand.  The API Gateway expects to receive json of the following format, and if the format differs it simply says "Malformed Lambda proxy response" and returns a 502.
+```
+{
+"statusCode": 200, 
+"headers": {"Content-Type": "application/json"},
+"body": "body_text_goes_here"
+}
+```
+This is what the output from the Eratosthenes Lambda function typically looks like:
+```
+{
+"statusCode": 200,
+"headers": {"Content-Type": "application/json"},
+"body": "{\"durationSeconds\": 8.345243, \"max\": 1000000, \"loops\": 1}"
+}
+```
+The API Gateway returns **status code 502** when the error is due excessive memory consumption within the Lambda function
