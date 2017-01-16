@@ -70,4 +70,5 @@ The same function code, instantiated as multiple Lambda functions each with a di
 You have now prepared all four required functions! Please proceed to setup the test harness.
 
 ### Test harness
+
 ## How to run it
