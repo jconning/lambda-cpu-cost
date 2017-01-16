@@ -85,11 +85,13 @@ Edit the config file (config.json) so that the function URLs correspond to the A
 Usage:
 <br>`cd src/github.com/jconning/lambda-cpu-cost`
 <br>`go run main.go`
+
 Command line parameters:
 - **-conc** *integer*: the maxiumum number of Lambda functions to run concurrently (default 100)
 - **-execs** *integer*: the number of times to execute each Lambda function (default 20)
 - **-loops** *integer*: the number of times to repeat the calculation of primes, without consuming additional memory (default 1)
 - **-max** *integer*: this is n, and all primes will be calculated up to and including n
+
 ### Run with defaults
 Running with the defaults will invoke each of the four Lambda functions 20 times, and each function will execute one loop of calculating all prime numbers up to 1M.  
 <br>`go run main.go`
