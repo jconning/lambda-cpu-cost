@@ -142,17 +142,19 @@ You can see the Lambda function logging directly by testing it in the AWS Consol
 ### API Gateway logging
 When invoked via API Gateway, the logging for both Lambda and API Gateway are configured in the API Gateway section of the AWS Console. Choose the Eratosthenes API in the API Gateway then in the left nav click **Stages**, then in the Stages pane click **prod**.  Then in the Settings tab, under "CloudWatch Settings", check the box **Enable CloudWatch Logs** and click **Save Changes**.  Once you make this settings change you may need to wait a few minutes before the logs start showing up.
 
-Whether or not you check the **Log full requests/responses data** checkbox will impact which errors will be available in the logs.  See the logging examples below for details.
+It is not necessary to check the checkbox **Log full requests/responses data** in order to see the error messages.  You can also set the log level to ERROR.
 
-Visit the CloudWatch section of the AWS Console and choose **Logs** in the left nav.  Look for the Eratosthenes log group.
+Turning on **Log full requests/responses data** results in too much verbose logging.  What I did was make a short test case that will force an error, then turn on **Log full requests/responses data** long enough to capture useful information.
+
+To view your logs, visit the CloudWatch section of the AWS Console and choose **Logs** in the left nav.  Look for the Eratosthenes log group.
 ### CloudWatch Logging example: timeout
-This is what appears in the CloudWatch log when the function is terminated due to an API Gateway timeout.  You do not need to check **Log full requests/responses data** in the API Gateway configuration (see above) for this line to appear -- it is adequate to simply have ERROR level logging turned on.
+This is what appears in the CloudWatch log when the function is terminated due to an API Gateway timeout.  This line appears regardless of whether **Log full requests/responses data** is turned on.
 ```
 Execution failed due to a timeout error
 ```
 The API Gateway returns **status code 504** when the error is due to an API Gateway timeout.
 ### CloudWatch logging example: excessive memory consumption
-This is what appears in the CloudWatch log when the function encounters an error due to too much memory consumption.  You need to check the checkbox **Log full requests/responses data** in the API Gateway configuration in order for this line to appear.
+This is what appears in the CloudWatch log when the function encounters an error due to too much memory consumption.  The last line appears regardless of whether **Log full requests/responses data** is turned on, but the rest of it appears only when that is turned on.
 ```
 Endpoint response body before transformations:
 {
