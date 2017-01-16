@@ -123,8 +123,18 @@ Now let's loop four times.  This will cause eratosthenes-128 to take longer than
 Let's run each function 50 times and increase the concurrency to an excessively high number (9999).  This will cause Lambda to throttle the function and you will see some errors returned, assuming your Lambda concurrency cap is set to 100, which is the default for new AWS accounts.  You can increase the concurrency (-execs) a lot more if you want to see interesting errors like too many sockets open on the client.
 <br>`go run main.go -execs 50 -conc 9999`
 ### Proper long running test
-We'll set n to 1.5M so the function has plenty of primes to calculate (and will keep the number of loops to the default of one).  We'll set the number of executions (per function) to 1000 so we put a lot of executions through Lambda.  We'll keep the concurrency limit to the default of 80 so we stay within the Lambda cap of 100 with some breathing room.  This test should take about 7 minutes to run.  To run it longer, simply increase the executions (-execs).  This test shouldn't produce any errors.
-<br>`go run main.go -max 1500000 -execs 1000`
+All we need to do is set the number of executions (-exec) to a high number so that Lambda has plenty of function calls to make.  We'll leave the concurrency limit to the default of 80 to ensure we don't get throttled by Lambda and to leave some breathing room.  We'll leave "n", our maximum prime number (-max), to the default of 1M to ensure the eratosthenes-128 function doesn't time out at all (even though it quite often will calculate all primes in about 12 seconds, I have seen it timeout (30 second timeout) from time to time.  This test should generally not produce any errors, although it is not unheard of for eratosthenes-128 to timeout a couple times when ran with a "-execs" value of 1000.
+<br>`go run main.go -execs 1000`
+Output (note that eratosthenes-128 errored out twice -- these were timeouts):
+```
+Number of lambda executions returning errors: 2
+Stats for each Lambda function by Lambda memory allocation:
+ 128mb 21.118205sec(avg) $0.044117(total) to calculate 998 times all prime numbers <=1000000
+ 256mb 10.268854sec(avg) $0.042995(total) to calculate 1000 times all prime numbers <=1000000
+ 512mb 3.164584sec(avg) $0.026577(total) to calculate 1000 times all prime numbers <=1000000
+ 1024mb 1.433012sec(avg) $0.024088(total) to calculate 1000 times all prime numbers <=1000000
+Total cost of this test run: $0.137777
+```
 ## Logging
 ### Lambda logging
 You can see the Lambda function logging directly by testing it in the AWS Console.  On the Lambda section of the console, choose the desired function and click the **Test** button.  Be sure the test event is configured as specified above.  Both the function output and the logging will appear in the console.
