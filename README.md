@@ -70,5 +70,15 @@ The same function code, instantiated as multiple Lambda functions each with a di
 You have now prepared all four required functions! Please proceed to setup the test harness.
 
 ### Test harness
-
+Edit the config file (config.json) so that the function URLs correspond to the API Gateway endpoints you created above.  It should be enough to simply replace the string "abcdefghij" with the corresponding token in your endpoints, if you named them as suggested above.
+```
+{
+    "functions": {
+        "128": "https://abcdefghij.execute-api.us-west-2.amazonaws.com/prod/eratosthenes-128",
+        "256": "https://abcdefghij.execute-api.us-west-2.amazonaws.com/prod/eratosthenes-256",
+        "512": "https://abcdefghij.execute-api.us-west-2.amazonaws.com/prod/eratosthenes-512",
+        "1024": "https://abcdefghij.execute-api.us-west-2.amazonaws.com/prod/eratosthenes-1024"
+    }
+}
+```
 ## How to run it
