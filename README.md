@@ -87,14 +87,15 @@ Usage:
 <br>`go run main.go`
 
 Command line parameters:
-- **-conc** *integer*: the maxiumum number of Lambda functions to run concurrently (default 100)
+- **-conc** *integer*: the maxiumum number of Lambda functions to run concurrently (default 80)
 - **-execs** *integer*: the number of times to execute each Lambda function (default 20)
 - **-loops** *integer*: the number of times to repeat the calculation of primes, without consuming additional memory (default 1)
 - **-max** *integer*: this is n, and all primes will be calculated up to and including n
 
 ### Run with defaults
-Running with the defaults will invoke each of the four Lambda functions 20 times, and each function will execute one loop of calculating all prime numbers up to 1M.  
+Running with the defaults (no command line parameters) will invoke each of the four Lambda functions 20 times, and each function will execute one loop of calculating all prime numbers up to 1M.  
 <br>`go run main.go`
+
 Sample output:
 ```
 Number of lambda executions returning errors: 0
@@ -116,11 +117,11 @@ Let's try a prime number limit of 2.5M, which will cause the Sieve of Eratosthen
 Let's loop the prime number calculation twice.  This will cause the Lambda function to repeat the calculation of primes without consuming more memory.  It will take twice as long to run as when we ran with the defaults.  There should be no errors from Lambda.
 <br>`go run main.go -loops 2`
 ### Loop four times
-Now let's loop four times.  This will cause eratosthenes-128 to take longer than 30 seconds, which is the maximum time allowed by the API Gateway.
+Now let's loop four times.  This will cause eratosthenes-128 to take longer than 30 seconds, which is the maximum time allowed by the API Gateway.  You should see errors from the eratosthenes-128 function and potentially some from the eratosthenes-256 function.
 <br>`go run main.go -loops 4`
 ### Excessive concurrency
 Let's run each function 50 times and increase the concurrency to an excessively high number (9999).  This will cause Lambda to throttle the function and you will see some errors returned, assuming your Lambda concurrency cap is set to 100, which is the default for new AWS accounts.  You can increase the concurrency (-execs) a lot more if you want to see interesting errors like too many sockets open on the client.
 <br>`go run main.go -execs 50 -conc 9999`
 ### Proper long running test
-We'll set n to 1.5M so the function has plenty of primes to calculate (and will keep the number of loops to the default of one).  We'll set the number of executions (per function) to 1000 so we put a lot of executions through Lambda.  We'll keep the concurrency limit to 80 so we stay within the cap of 100 with some breathing room.  This test should take about 7 minutes to run.  To run it longer, simply increase the executions (-execs).  This test shouldn't produce any errors.
+We'll set n to 1.5M so the function has plenty of primes to calculate (and will keep the number of loops to the default of one).  We'll set the number of executions (per function) to 1000 so we put a lot of executions through Lambda.  We'll keep the concurrency limit to the default of 80 so we stay within the Lambda cap of 100 with some breathing room.  This test should take about 7 minutes to run.  To run it longer, simply increase the executions (-execs).  This test shouldn't produce any errors.
 <br>`go run main.go -max 1500000 -execs 1000`
