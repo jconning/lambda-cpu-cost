@@ -125,6 +125,7 @@ Let's run each function 50 times and increase the concurrency to an excessively 
 ### Proper long running test
 All we need to do is set the number of executions (-exec) to a high number so that Lambda has plenty of function calls to make.  We'll leave the concurrency limit to the default of 80 to ensure we don't get throttled by Lambda and to leave some breathing room.  We'll leave "n", our maximum prime number (-max), to the default of 1M to ensure the eratosthenes-128 function doesn't time out at all (even though it quite often will calculate all primes in about 12 seconds, I have seen it timeout (30 second timeout) from time to time.  This test should generally not produce any errors, although it is not unheard of for eratosthenes-128 to timeout a couple times when ran with a "-execs" value of 1000.
 <br>`go run main.go -execs 1000`
+
 Output (note that eratosthenes-128 errored out twice -- these were timeouts):
 ```
 Number of lambda executions returning errors: 2
