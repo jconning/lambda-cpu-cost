@@ -11,6 +11,23 @@ The test harness is written in Go and uses a channel to control concurrency.  A 
 
 The same function code, instantiated as multiple Lambda functions each with a distinct level of memory, are executed the same number of times.  Since each Lambda level of memory corresponds to a distinct amount of CPU, we can measure the execution time of calculating primes for multiple levels of CPU.  And since Lambda charges per GB-second of execution time, we can show the cost of calculating primes at various Lambda memory configurations.  We can answer the question: if we double the CPU, will that cut the time in half while still costing the same?
 ## Learnings
+### API Gateway Timeout
+While Lambda offers a 5 minute timeout for functions, API Gateway only offers 30 seconds.  So, any use of Lambda by the API Gateway is limited to functions running 30 seconds or less.
+### Variation of Lambda function execution times
+The same CPU bound code, run with the same Lambda memory/cpu configuration, runs different amounts of time when run again and again.  For example, calculating all prime numbers <=1M in the 128mb Lambda setting, run ten times sequentially (not parallel), took the following number of seconds:
+17.9 17.1 14.8 16.6 16.1 16.5 16.5 15.1 15.1 15.4
+
+This raises an interesting point.  Lambda costs different amounts to perform the same work at different times.  An interesting side effect of serverless computing.
+### The effective cost of different memory levels is similar
+Each step-up in Lambda memory carries with it a corresponding step-up in CPU power.  The results below show the effective cost for performing the same workload (calculating all prime numbers <=1M) is roughly the same for each memory level.  If your workload requires significant CPU and is CPU bound, it appears to be worthwhile to choose a higher memory configuration.  Even if you don't need the memory, the additional CPU that comes with it will get the job done faster for the same price.  Your lambda function will be much faster without additional cost.  This exacerbates the benefits of serverless computing because you get the same serverless benefit, pay the same amount, and get your work done in a fraction of the time.
+```
+Stats for each Lambda function by Lambda memory allocation:
+ 128mb 11.722965sec(avg) $0.024628(total) to calculate 1000 times all prime numbers <=1000000
+ 256mb 6.678945sec(avg) $0.028035(total) to calculate 1000 times all prime numbers <=1000000
+ 512mb 3.194954sec(avg) $0.026830(total) to calculate 1000 times all prime numbers <=1000000
+ 1024mb 1.465984sec(avg) $0.024638(total) to calculate 1000 times all prime numbers <=1000000
+Total cost of this test run: $0.104130
+```
 ## How to set it up
 ### Lambda functions
 1. In the AWS Console, visit the Lambda section and click the **Create a Lambda function** button.
