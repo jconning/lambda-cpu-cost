@@ -110,7 +110,7 @@ There should be no execution errors.  Function eratosthenes-128 ran twice as lon
 ### Calculate higher prime numbers
 We can increase n so that we calculate higher prime numbers, while still invoking the same number of Labmda function calls.  This will consume more time since the CPU has to work more to calculate the primes.  We set a limit of 1.5M which will result in a Sieve that still fits within the 128mb memory footprint.
 <br>`go run main.go -max 1500000`
-### Calculate even more prime numbers
+### Calculate even higher prime numbers
 Let's try a prime number limit of 2.5M, which will cause the Sieve of Eratosthenes to exceed the 128mb limit.  This will result in status code 502 for the eratosthenes-128 function, which is due to excess memory consumption in the Lambda function.
 <br>`go run main.go -max 2500000`
 ### Loop twice
