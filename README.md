@@ -15,7 +15,7 @@ The same function code, instantiated as multiple Lambda functions each with a di
 While Lambda offers a 5 minute timeout for functions, API Gateway only offers 30 seconds.  So, any use of Lambda by the API Gateway is limited to functions running 30 seconds or less.
 ### Variation of Lambda function execution times
 The same CPU bound code, run with the same Lambda memory/cpu configuration, runs different amounts of time when run again and again.  For example, calculating all prime numbers <=1M in the 128mb Lambda setting, run ten times sequentially (not parallel), took the following number of seconds:
-17.9 17.1 14.8 16.6 16.1 16.5 16.5 15.1 15.1 15.4
+<br>`17.9 17.1 14.8 16.6 16.1 16.5 16.5 15.1 15.1 15.4`
 
 This raises an interesting point.  Lambda costs different amounts to perform the same work at different times.  An interesting side effect of serverless computing.
 ### The effective cost of different memory levels is similar
