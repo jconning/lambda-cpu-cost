@@ -196,3 +196,5 @@ This is what the output from the Eratosthenes Lambda function typically looks li
 }
 ```
 The API Gateway returns **status code 502** when the error is due excessive memory consumption within the Lambda function
+## License
+This project is licensed under the [MIT](https://github.com/jconning/lambda-cpu-cost/blob/master/LICENSE) license.
