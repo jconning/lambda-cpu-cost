@@ -4,25 +4,26 @@ package main
 
 import (
 	"encoding/json"
-	"errors"
 	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"sort"
-	"strconv"
 	"sync"
 )
 
-var lambdaFunctions = map[int]string{}
+var lambdaFunctions map[int]string
 var lambdaErrors int
 
-var maxPrime int
-var numExecutions int
-var numLoops int
-var maxConcurrency int
-var configFile string
+// Command line parameters
+var (
+	maxPrime int
+	numExecutions int
+	numLoops int
+	maxConcurrency int
+	configFile string
+)
 
 func init() {
 	flag.IntVar(&maxPrime, "max", 1000000, "maximum number to search for primes (<=2M to not cause out of memory in the lowest Lambda memory setting)")
@@ -54,8 +55,8 @@ type execution struct {
 }
 
 // AWS Lambda pricing in USD as of Jan 2017
-var costPerRequest float64 = 0.0000002
-var costPerGbSeconds float64 = 0.00001667
+var costPerRequest = 0.0000002
+var costPerGbSeconds = 0.00001667
 
 func parseConfig() {
 	contents, err := ioutil.ReadFile(configFile)
@@ -63,23 +64,16 @@ func parseConfig() {
 		log.Fatal(fmt.Sprintf("Error opening config file %s: %v\n", configFile, err))
 	}
 
-	var config interface{}
+	type configStruct struct {
+		Functions map[int]string
+	}
+	var config configStruct
+
 	err = json.Unmarshal(contents, &config)
 	if err != nil {
 		log.Fatal(fmt.Sprintf("Error parsing config file: %v\n", err))
 	}
-
-	// Parse the json config using the standard library
-	funcConfig := config.(map[string]interface{})
-	functions := funcConfig["functions"].(map[string]interface{})
-	for key, value := range functions {
-		mem, err := strconv.Atoi(key)
-		if err != nil {
-			log.Fatal(fmt.Sprintf("Error parsing memory level %s in config file: %v\n", key, err))
-		}
-		url := value.(string)
-		lambdaFunctions[mem] = url
-	}
+	lambdaFunctions = config.Functions
 }
 
 func triggerLambda(url string, mem int, max int, loops int) (execution, error) {
@@ -92,7 +86,7 @@ func triggerLambda(url string, mem int, max int, loops int) (execution, error) {
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
-		return e, errors.New(fmt.Sprintf("function %dmb returned status code: %d", mem, resp.StatusCode))
+		return e, fmt.Errorf("function %dmb returned status code: %d", mem, resp.StatusCode)
 	}
 
 	body, err := ioutil.ReadAll(resp.Body)
@@ -100,10 +94,6 @@ func triggerLambda(url string, mem int, max int, loops int) (execution, error) {
 		return e, err
 	}
 	err = json.Unmarshal(body, &e)
-
-	//if mem == 128 {
-	//	fmt.Printf("%f\n", e.DurationSeconds)
-	//}
 
 	return e, nil
 }
@@ -177,3 +167,4 @@ func main() {
 	invokeLambda(executions)
 	displayResults(executions)
 }
+
