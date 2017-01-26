@@ -105,8 +105,8 @@ func invokeLambda(executions chan execution) {
 	fmt.Printf("Triggering %d Lambda functions %d times each, all in parallel\n", len(lambdaFunctions), numExecutions)
 	fmt.Printf("Each function will loop %d time(s) and in each loop calculate all primes <=%d\n", numLoops, maxPrime)
 	fmt.Println("Working...")
-	for mem, url := range lambdaFunctions {
-		for c := 0; c < numExecutions; c++ {
+	for c := 0; c < numExecutions; c++ {
+		for mem, url := range lambdaFunctions {
 			wg.Add(1)
 			go func(u string, m int) {
 				defer wg.Done()
