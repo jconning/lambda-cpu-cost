@@ -19,7 +19,7 @@ The same CPU bound code, run with the same Lambda memory/cpu configuration, runs
 
 This raises an interesting point.  Lambda costs different amounts to perform the same work at different times.  An interesting side effect of serverless computing.
 ### The effective cost of different memory levels is similar
-Each step-up in Lambda memory carries with it a corresponding step-up in CPU power.  The results below show the effective cost for performing the same workload (calculating all prime numbers <=1M) is roughly the same for each memory level.  If your workload requires significant CPU and is CPU bound, it appears to be worthwhile to choose a higher memory configuration.  Even if you don't need the memory, the additional CPU that comes with it will get the job done faster for the same price.  Your lambda function will be much faster without additional cost.  This exacerbates the benefits of serverless computing because you get the same serverless benefit, pay the same amount, and get your work done in a fraction of the time.
+Each step-up in Lambda memory carries with it a corresponding step-up in CPU power.  The results below show the effective cost for performing the same workload (calculating all prime numbers <=1M) is roughly the same for each memory level.  If your workload requires significant CPU and is CPU bound, it appears to be worthwhile to choose a higher memory configuration.  Even if you don't need the memory, the additional CPU that comes with it will get the job done faster for the same price.  Your lambda function will be much faster without additional cost.  This amplifies the benefits of serverless computing because you get the same serverless benefit, pay the same amount, and get your work done in a fraction of the time.
 ```
 Stats for each Lambda function by Lambda memory allocation:
  128mb 11.722965sec(avg) $0.024628(total) to calculate 1000 times all prime numbers <=1000000
@@ -104,6 +104,7 @@ Usage:
 <br>`go run main.go`
 
 Command line parameters:
+- **-config** *string*: path/name of config file (default "config.json")
 - **-conc** *integer*: the maxiumum number of Lambda functions to run concurrently (default 80)
 - **-execs** *integer*: the number of times to execute each Lambda function (default 20)
 - **-loops** *integer*: the number of times to repeat the calculation of primes, without consuming additional memory (default 1)
